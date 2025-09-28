@@ -241,16 +241,7 @@ const Dashboard = () => {
               </div>
             </div>
             
-            {/* Add Home Button */}
-            <button
-              onClick={() => navigate('/')}
-              className="hidden md:flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <Home className="h-4 w-4" />
-              <span>Home</span>
-            </button>
-
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Home icon moved to right */}
             <div className="hidden md:flex items-center space-x-4">
               <div className="flex items-center space-x-3">
                 <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full ${getAvatarColor(user?.name)} flex items-center justify-center text-white text-sm font-medium shadow-md`}>
@@ -261,6 +252,15 @@ const Dashboard = () => {
                   <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
               </div>
+              
+              {/* Home Button - Moved to right */}
+              <button
+                onClick={() => navigate('/')}
+                className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <Home className="h-4 w-4" />
+                <span className="hidden lg:inline">Home</span>
+              </button>
               
               <button
                 onClick={handleLogout}
@@ -294,6 +294,16 @@ const Dashboard = () => {
                   <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
               </div>
+              
+              {/* Home Button in Mobile Menu */}
+              <button
+                onClick={() => navigate('/')}
+                className="w-full flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <Home className="h-5 w-5" />
+                <span>Home</span>
+              </button>
+              
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
