@@ -179,8 +179,8 @@ const Dashboard = () => {
   // Filter and sort notes
   let filteredNotes = notes.filter(note => {
     const matchesSearch = note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      note.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      note.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+    note.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    note.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
     
     const matchesTags = selectedTags.length === 0 || 
       selectedTags.some(tag => note.tags.includes(tag))
@@ -241,6 +241,15 @@ const Dashboard = () => {
               </div>
             </div>
             
+            {/* Add Home Button */}
+            <button
+              onClick={() => navigate('/')}
+              className="hidden md:flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <Home className="h-4 w-4" />
+              <span>Home</span>
+            </button>
+
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-4">
               <div className="flex items-center space-x-3">
@@ -304,15 +313,15 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-0">
               <div className={`w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-2xl ${getAvatarColor(user?.name)} flex items-center justify-center text-white text-lg sm:text-xl lg:text-2xl font-bold shadow-lg`}>
-                {generateAvatar(user?.name)}
-              </div>
-              <div>
+              {generateAvatar(user?.name)}
+            </div>
+            <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                   Welcome back, {user?.name?.split(' ')[0] || 'User'}!
-                </h2>
+              </h2>
                 <p className="text-sm sm:text-base text-gray-600 mt-1">
                   You have {notes.length} {notes.length === 1 ? 'note' : 'notes'}
-                </p>
+              </p>
               </div>
             </div>
             <button
@@ -426,12 +435,12 @@ const Dashboard = () => {
                   </button>
                 ))}
                 {selectedTags.length > 0 && (
-                  <button
+          <button
                     onClick={() => setSelectedTags([])}
                     className="px-3 py-1 rounded-full text-sm bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
-                  >
+          >
                     Clear All
-                  </button>
+          </button>
                 )}
               </div>
             </div>
