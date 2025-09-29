@@ -1,13 +1,11 @@
 import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 
 const AuthCallback = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const { user, setUser } = useAuth()
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -21,12 +19,16 @@ const AuthCallback = () => {
           // Set the authorization header
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
           
-          // Fetch user data
+          // Fetch user data to verify the token works
           const response = await axios.get('/api/auth/me')
-          setUser(response.data.user)
           
-          toast.success('Login successful!')
-          navigate('/dashboard')
+          if (response.data.user) {
+            toast.success('Login successful!')
+            // Reload the page to let AuthContext pick up the token
+            window.location.href = '/dashboard'
+          } else {
+            throw new Error('No user data received')
+          }
         } catch (error) {
           console.error('Auth callback error:', error)
           localStorage.removeItem('token')
@@ -41,7 +43,7 @@ const AuthCallback = () => {
     }
 
     handleCallback()
-  }, [searchParams, navigate, setUser])
+  }, [searchParams, navigate])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

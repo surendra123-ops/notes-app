@@ -15,6 +15,9 @@ function App() {
       <Router>
         <div className="min-h-screen bg-gray-50">
           <Routes>
+            {/* Auth callback route - should be first to avoid conflicts */}
+            <Route path="/auth/callback" element={<AuthCallback />} />
+            
             {/* Public Routes */}
             <Route path="/login" element={
               <PublicRoute>
@@ -26,8 +29,6 @@ function App() {
                 <Register />
               </PublicRoute>
             } />
-          
-            <Route path="/auth/callback" element={<AuthCallback />} />
             
             {/* Protected Routes */}
             <Route path="/" element={
