@@ -55,8 +55,13 @@ export const AuthProvider = ({ children }) => {
       return { success: true }
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed'
-      toast.error(message)
-      return { success: false, message }
+      
+      // Don't show toast for login errors, let the component handle them
+      return { 
+        success: false, 
+        message: message,
+        status: error.response?.status
+      }
     }
   }
 
@@ -73,8 +78,13 @@ export const AuthProvider = ({ children }) => {
       return { success: true }
     } catch (error) {
       const message = error.response?.data?.message || 'Registration failed'
-      toast.error(message)
-      return { success: false, message }
+      
+      // Don't show toast for registration errors, let the component handle them
+      return { 
+        success: false, 
+        message: message,
+        status: error.response?.status
+      }
     }
   }
 

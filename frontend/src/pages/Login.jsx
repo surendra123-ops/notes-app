@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react'
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,25 +10,85 @@ const Login = () => {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState({})
+  const [generalError, setGeneralError] = useState('')
   
   const { login } = useAuth()
   const navigate = useNavigate()
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+    
+    // Clear field-specific error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
+    }
+    
+    // Clear general error
+    if (generalError) {
+      setGeneralError('')
+    }
+  }
+
+  const validateForm = () => {
+    const newErrors = {}
+    
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+    
+    // Password validation
+    if (!formData.password.trim()) {
+      newErrors.password = 'Password is required'
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Clear previous errors
+    setErrors({})
+    setGeneralError('')
+    
+    // Validate form
+    if (!validateForm()) {
+      return
+    }
+    
     setLoading(true)
     
     const result = await login(formData.email, formData.password)
     
     if (result.success) {
       navigate('/dashboard')
+    } else {
+      // Handle different types of errors
+      if (result.message === 'Invalid credentials') {
+        setGeneralError('Invalid email or password. Please check your credentials and try again.')
+      } else if (result.message === 'User not found') {
+        setGeneralError('No account found with this email. Please sign up first.')
+        // Optionally redirect to register after a delay
+        setTimeout(() => {
+          navigate('/register', { state: { email: formData.email } })
+        }, 2000)
+      } else {
+        setGeneralError(result.message || 'Login failed. Please try again.')
+      }
     }
     
     setLoading(false)
@@ -56,6 +116,21 @@ const Login = () => {
         </div>
 
         <div className="card">
+          {/* General Error Message */}
+          {generalError && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
+              <AlertCircle className="h-5 w-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" />
+              <div className="text-sm text-red-700">
+                {generalError}
+                {generalError.includes('No account found') && (
+                  <p className="mt-1 text-xs text-red-600">
+                    Redirecting to sign up page...
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -63,7 +138,7 @@ const Login = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className={`h-5 w-5 ${errors.email ? 'text-red-400' : 'text-gray-400'}`} />
                 </div>
                 <input
                   id="email"
@@ -71,12 +146,18 @@ const Login = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className="input-field pl-10"
+                  className={`input-field pl-10 ${errors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
                 />
               </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.email}
+                </p>
+              )}
             </div>
 
             <div>
@@ -85,7 +166,7 @@ const Login = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className={`h-5 w-5 ${errors.password ? 'text-red-400' : 'text-gray-400'}`} />
                 </div>
                 <input
                   id="password"
@@ -93,7 +174,7 @@ const Login = () => {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
-                  className="input-field pl-10 pr-10"
+                  className={`input-field pl-10 pr-10 ${errors.password ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
@@ -110,6 +191,12 @@ const Login = () => {
                   )}
                 </button>
               </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.password}
+                </p>
+              )}
             </div>
 
             <button
@@ -117,7 +204,14 @@ const Login = () => {
               disabled={loading}
               className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Signing in...
+                </div>
+              ) : (
+                'Sign in'
+              )}
             </button>
           </form>
 

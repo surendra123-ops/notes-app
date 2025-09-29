@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, AlertCircle, CheckCircle } from 'lucide-react'
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,22 +13,88 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState({})
+  const [generalError, setGeneralError] = useState('')
   
   const { register } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // Pre-fill email if coming from login page
+  useEffect(() => {
+    if (location.state?.email) {
+      setFormData(prev => ({
+        ...prev,
+        email: location.state.email
+      }))
+    }
+  }, [location.state])
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+    
+    // Clear field-specific error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
+    }
+    
+    // Clear general error
+    if (generalError) {
+      setGeneralError('')
+    }
+  }
+
+  const validateForm = () => {
+    const newErrors = {}
+    
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = 'Full name is required'
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters'
+    }
+    
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+    
+    // Password validation
+    if (!formData.password.trim()) {
+      newErrors.password = 'Password is required'
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters'
+    }
+    
+    // Confirm password validation
+    if (!formData.confirmPassword.trim()) {
+      newErrors.confirmPassword = 'Please confirm your password'
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match')
+    // Clear previous errors
+    setErrors({})
+    setGeneralError('')
+    
+    // Validate form
+    if (!validateForm()) {
       return
     }
     
@@ -37,7 +103,22 @@ const Register = () => {
     const result = await register(formData.name, formData.email, formData.password)
     
     if (result.success) {
+      // Show success message briefly before redirecting
+      setGeneralError('')
       navigate('/dashboard')
+    } else {
+      // Handle different types of errors
+      if (result.message.includes('User already exists')) {
+        setGeneralError('An account with this email already exists. Please sign in instead.')
+        // Optionally redirect to login after a delay
+        setTimeout(() => {
+          navigate('/login', { state: { email: formData.email } })
+        }, 2000)
+      } else if (result.message.includes('Validation failed')) {
+        setGeneralError('Please check your input and try again.')
+      } else {
+        setGeneralError(result.message || 'Registration failed. Please try again.')
+      }
     }
     
     setLoading(false)
@@ -46,6 +127,19 @@ const Register = () => {
   const handleGoogleLogin = () => {
     window.location.href = '/api/auth/google'
   }
+
+  // Password strength indicator
+  const getPasswordStrength = (password) => {
+    if (password.length === 0) return { strength: 0, text: '', color: '' }
+    if (password.length < 6) return { strength: 1, text: 'Weak', color: 'text-red-500' }
+    if (password.length < 8) return { strength: 2, text: 'Fair', color: 'text-yellow-500' }
+    if (password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
+      return { strength: 4, text: 'Strong', color: 'text-green-500' }
+    }
+    return { strength: 3, text: 'Good', color: 'text-blue-500' }
+  }
+
+  const passwordStrength = getPasswordStrength(formData.password)
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -65,6 +159,21 @@ const Register = () => {
         </div>
 
         <div className="card">
+          {/* General Error Message */}
+          {generalError && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
+              <AlertCircle className="h-5 w-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" />
+              <div className="text-sm text-red-700">
+                {generalError}
+                {generalError.includes('already exists') && (
+                  <p className="mt-1 text-xs text-red-600">
+                    Redirecting to sign in page...
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -72,7 +181,7 @@ const Register = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
+                  <User className={`h-5 w-5 ${errors.name ? 'text-red-400' : 'text-gray-400'}`} />
                 </div>
                 <input
                   id="name"
@@ -80,12 +189,18 @@ const Register = () => {
                   type="text"
                   autoComplete="name"
                   required
-                  className="input-field pl-10"
+                  className={`input-field pl-10 ${errors.name ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleChange}
                 />
               </div>
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.name}
+                </p>
+              )}
             </div>
 
             <div>
@@ -94,7 +209,7 @@ const Register = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className={`h-5 w-5 ${errors.email ? 'text-red-400' : 'text-gray-400'}`} />
                 </div>
                 <input
                   id="email"
@@ -102,12 +217,18 @@ const Register = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className="input-field pl-10"
+                  className={`input-field pl-10 ${errors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
                 />
               </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.email}
+                </p>
+              )}
             </div>
 
             <div>
@@ -116,7 +237,7 @@ const Register = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className={`h-5 w-5 ${errors.password ? 'text-red-400' : 'text-gray-400'}`} />
                 </div>
                 <input
                   id="password"
@@ -124,7 +245,7 @@ const Register = () => {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   required
-                  className="input-field pl-10 pr-10"
+                  className={`input-field pl-10 pr-10 ${errors.password ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}`}
                   placeholder="Create a password"
                   value={formData.password}
                   onChange={handleChange}
@@ -141,6 +262,37 @@ const Register = () => {
                   )}
                 </button>
               </div>
+              {formData.password && (
+                <div className="mt-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className={`${passwordStrength.color} font-medium`}>
+                      Password strength: {passwordStrength.text}
+                    </span>
+                    <div className="flex space-x-1">
+                      {[1, 2, 3, 4].map((level) => (
+                        <div
+                          key={level}
+                          className={`h-1 w-6 rounded-full ${
+                            level <= passwordStrength.strength
+                              ? passwordStrength.strength <= 2
+                                ? 'bg-red-400'
+                                : passwordStrength.strength <= 3
+                                ? 'bg-yellow-400'
+                                : 'bg-green-400'
+                              : 'bg-gray-200'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.password}
+                </p>
+              )}
             </div>
 
             <div>
@@ -149,7 +301,7 @@ const Register = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className={`h-5 w-5 ${errors.confirmPassword ? 'text-red-400' : formData.confirmPassword && formData.password === formData.confirmPassword ? 'text-green-400' : 'text-gray-400'}`} />
                 </div>
                 <input
                   id="confirmPassword"
@@ -157,23 +309,29 @@ const Register = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   required
-                  className="input-field pl-10 pr-10"
+                  className={`input-field pl-10 pr-10 ${errors.confirmPassword ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : formData.confirmPassword && formData.password === formData.confirmPassword ? 'border-green-300 focus:border-green-500 focus:ring-green-500' : ''}`}
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                 />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
+                {formData.confirmPassword && formData.password === formData.confirmPassword && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-400" />
+                  </div>
+                )}
               </div>
+              {formData.confirmPassword && formData.password === formData.confirmPassword && (
+                <p className="mt-1 text-sm text-green-600 flex items-center">
+                  <CheckCircle className="h-4 w-4 mr-1" />
+                  Passwords match
+                </p>
+              )}
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.confirmPassword}
+                </p>
+              )}
             </div>
 
             <button
@@ -181,7 +339,14 @@ const Register = () => {
               disabled={loading}
               className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating account...' : 'Create account'}
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Creating account...
+                </div>
+              ) : (
+                'Create account'
+              )}
             </button>
           </form>
 
