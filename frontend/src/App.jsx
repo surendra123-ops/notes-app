@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './contexts/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
@@ -15,10 +15,7 @@ function App() {
       <Router>
         <div className="min-h-screen bg-gray-50">
           <Routes>
-            {/* Auth callback route - should be first to avoid conflicts */}
             <Route path="/auth/callback" element={<AuthCallback />} />
-            
-            {/* Public Routes */}
             <Route path="/login" element={
               <PublicRoute>
                 <Login />
@@ -29,8 +26,6 @@ function App() {
                 <Register />
               </PublicRoute>
             } />
-            
-            {/* Protected Routes */}
             <Route path="/" element={
               <ProtectedRoute>
                 <Welcome />
