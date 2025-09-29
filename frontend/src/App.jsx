@@ -5,7 +5,6 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { PublicRoute } from './components/PublicRoute'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import VerifyOTP from './pages/VerifyOTP'
 import Dashboard from './pages/Dashboard'
 import Welcome from './pages/Welcome'
 import AuthCallback from './pages/AuthCallback'
@@ -27,11 +26,7 @@ function App() {
                 <Register />
               </PublicRoute>
             } />
-            <Route path="/verify-otp" element={
-              <PublicRoute>
-                <VerifyOTP />
-              </PublicRoute>
-            } />
+          
             <Route path="/auth/callback" element={<AuthCallback />} />
             
             {/* Protected Routes */}

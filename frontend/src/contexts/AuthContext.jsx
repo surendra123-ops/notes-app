@@ -63,40 +63,16 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password) => {
     try {
       const response = await axios.post('/api/auth/register', { name, email, password })
-      toast.success('Registration successful! Please check your email for OTP.')
-      return { success: true, userId: response.data.userId }
-    } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed'
-      toast.error(message)
-      return { success: false, message }
-    }
-  }
-
-  const verifyOTP = async (email, otp) => {
-    try {
-      const response = await axios.post('/api/auth/verify-otp', { email, otp })
       const { token, user } = response.data
       
       localStorage.setItem('token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       setUser(user)
       
-      toast.success('Email verified successfully!')
+      toast.success('Registration successful!')
       return { success: true }
     } catch (error) {
-      const message = error.response?.data?.message || 'OTP verification failed'
-      toast.error(message)
-      return { success: false, message }
-    }
-  }
-
-  const resendOTP = async (email) => {
-    try {
-      await axios.post('/api/auth/resend-otp', { email })
-      toast.success('OTP sent successfully!')
-      return { success: true }
-    } catch (error) {
-      const message = error.response?.data?.message || 'Failed to resend OTP'
+      const message = error.response?.data?.message || 'Registration failed'
       toast.error(message)
       return { success: false, message }
     }
@@ -114,8 +90,6 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     register,
-    verifyOTP,
-    resendOTP,
     logout
   }
 

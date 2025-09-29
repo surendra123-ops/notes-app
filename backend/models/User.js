@@ -24,11 +24,7 @@ const userSchema = new mongoose.Schema({
   },
   isEmailVerified: {
     type: Boolean,
-    default: false
-  },
-  otp: {
-    code: String,
-    expiresAt: Date
+    default: true
   },
   avatar: {
     type: String,
@@ -55,30 +51,6 @@ userSchema.pre('save', async function(next) {
 userSchema.methods.comparePassword = async function(candidatePassword) {
   if (!this.password) return false;
   return bcrypt.compare(candidatePassword, this.password);
-};
-
-// Generate OTP
-userSchema.methods.generateOTP = function() {
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  this.otp = {
-    code: otp,
-    expiresAt: new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
-  };
-  return otp;
-};
-
-// Verify OTP
-userSchema.methods.verifyOTP = function(otp) {
-  if (!this.otp || !this.otp.code || !this.otp.expiresAt) {
-    return false;
-  }
-  
-  if (new Date() > this.otp.expiresAt) {
-    this.otp = undefined;
-    return false;
-  }
-  
-  return this.otp.code === otp;
 };
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,266 +1,341 @@
-# �� Modern Note Taking Application
+# Note Taking App
 
-A full-stack, production-ready note-taking application built with modern web technologies. Features comprehensive user authentication, advanced note management, and a beautiful responsive design that works seamlessly across all devices.
+A modern, full-stack web application for creating, managing, and organizing personal notes with secure authentication and beautiful user interface.
 
-## 🌟 Key Features
+## ✨ Features
 
-### 🔐 Advanced Authentication System
-- **Multi-Method Authentication**: Email/Password + Google OAuth
-- **Email Verification**: 6-digit OTP system with 10-minute expiration
-- **JWT Security**: Secure token-based authentication with 7-day expiration
-- **Password Security**: bcrypt hashing with salt rounds
-- **Account Linking**: Seamless Google account linking for existing users
+### 🔐 Authentication
+- **Email & Password Registration** - Simple and secure user registration
+- **Google OAuth Integration** - One-click login with Google accounts
+- **JWT Authentication** - Secure token-based authentication system
+- **Protected Routes** - Route protection for authenticated users only
+- **Auto-login** - Seamless login experience with persistent sessions
 
-### 📱 Responsive Note Management
-- **CRUD Operations**: Create, Read, Update, Delete notes
-- **Advanced Search**: Search across titles, content, and tags
-- **Smart Organization**: Pin/unpin notes for quick access
-- **Visual Organization**: 12 color-coded background options
-- **Tag System**: Comma-separated tags for categorization
-- **Dual View Modes**: Grid and List view options
-- **Real-time Filtering**: Filter by tags, pinned status, and search terms
-- **Sorting Options**: Sort by newest, oldest, or alphabetical
+### 📝 Note Management
+- **Create Notes** - Rich text note creation with titles and content
+- **Edit & Update** - Real-time note editing and updates
+- **Delete Notes** - Secure note deletion with confirmation
+- **Pin Notes** - Pin important notes to the top for easy access
+- **Color Coding** - Customize note colors for better visual organization
+- **Tagging System** - Add and filter notes using custom tags
+- **Search Functionality** - Powerful search through notes by title and content
+- **Sorting Options** - Sort notes by date, title, or pinned status
 
-### 🎨 Modern UI/UX Design
-- **Mobile-First Design**: Optimized for all screen sizes
-- **Responsive Layout**: Adaptive grid (1-4 columns based on device)
-- **Modern Aesthetics**: Clean, minimalist design with Tailwind CSS
-- **Smooth Animations**: Hover effects, transitions, and loading states
-- **Toast Notifications**: Real-time user feedback
-- **Accessibility**: Proper contrast, focus states, and keyboard navigation
-- **Dark/Light Theme Ready**: Prepared for theme switching
+### 🎨 User Interface
+- **Responsive Design** - Perfect experience across desktop, tablet, and mobile
+- **Modern UI** - Clean, intuitive interface built with Tailwind CSS
+- **Grid & List Views** - Toggle between different note display modes
+- **Real-time Notifications** - Toast notifications for all user actions
+- **Loading States** - Smooth loading indicators for better UX
+- **Error Handling** - User-friendly error messages and feedback
 
-### 🛡️ Enterprise-Grade Security
-- **Rate Limiting**: 100 requests per 15 minutes per IP
-- **Input Validation**: Server-side validation with express-validator
-- **CORS Protection**: Secure cross-origin request handling
-- **Helmet.js**: Security headers protection
-- **Environment Variables**: Secure configuration management
-- **Error Handling**: Comprehensive error management and logging
+### 🔒 Security Features
+- **Password Hashing** - Bcrypt with salt rounds for secure password storage
+- **JWT Tokens** - Secure token-based authentication with expiration
+- **Rate Limiting** - API rate limiting to prevent abuse
+- **Input Validation** - Server-side validation for all user inputs
+- **CORS Protection** - Configured CORS for secure cross-origin requests
+- **Security Headers** - Helmet.js for additional security headers
 
-## 🛠️ Technology Stack
+## 🛠️ Tech Stack
 
-### Frontend Technologies
-- **React 19.1.1**: Latest React with modern hooks and features
-- **Vite 7.1.7**: Lightning-fast build tool and dev server
-- **Tailwind CSS 3.3.6**: Utility-first CSS framework
-- **React Router 6.20.1**: Client-side routing
-- **Axios 1.6.2**: HTTP client for API communication
-- **React Hot Toast 2.4.1**: Beautiful toast notifications
-- **Lucide React 0.294.0**: Modern icon library
-- **React Google Login 5.2.2**: Google OAuth integration
+### Frontend
+- **React 19.1.1** - Latest React with modern hooks
+- **React Router DOM 6.20.1** - Client-side routing
+- **Axios 1.6.2** - HTTP client for API communication
+- **Tailwind CSS 3.3.6** - Utility-first CSS framework
+- **Lucide React 0.294.0** - Beautiful, customizable icons
+- **React Hot Toast 2.4.1** - Elegant toast notifications
+- **Vite 7.1.7** - Lightning-fast build tool and dev server
 
-### Backend Technologies
-- **Node.js**: JavaScript runtime environment
-- **Express.js 4.18.2**: Web application framework
-- **MongoDB 8.0.3**: NoSQL database with Mongoose ODM
-- **JWT 9.0.2**: JSON Web Token authentication
-- **Passport.js 0.7.0**: Authentication middleware
-- **Nodemailer 6.9.7**: Email service integration
-- **Bcryptjs 2.4.3**: Password hashing
-- **Express Validator 7.0.1**: Input validation
-- **Helmet 7.1.0**: Security middleware
-- **CORS 2.8.5**: Cross-origin resource sharing
-
-### Development Tools
-- **ESLint**: Code linting and formatting
-- **Nodemon**: Development server auto-restart
-- **PostCSS**: CSS processing
-- **Autoprefixer**: CSS vendor prefixing
-
-## 📋 Prerequisites
-
-Before running this application, ensure you have:
-
-- **Node.js** (v18 or higher) - [Download](https://nodejs.org/)
-- **MongoDB** (v5.0 or higher) - [Download](https://www.mongodb.com/try/download/community) or [MongoDB Atlas](https://www.mongodb.com/atlas)
-- **npm** or **yarn** package manager
-- **Git** for version control
-
-## 🚀 Installation & Setup
-
-### 1. Clone the Repository
-
-```bash
-git clone <your-repository-url>
-cd assignment-2
-```
-
-### 2. Backend Setup
-
-```bash
-cd backend
-npm install
-```
-
-#### Environment Configuration
-
-Create a `.env` file in the backend directory:
-
-```env
-# Server Configuration
-PORT=5000
-NODE_ENV=development
-
-# Database Configuration
-MONGODB_URI=mongodb://localhost:27017/notetaking
-# For MongoDB Atlas: mongodb+srv://username:password@cluster.mongodb.net/notetaking
-
-# JWT Configuration
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-
-# Frontend URL
-FRONTEND_URL=http://localhost:5173
-
-# Email Configuration (Gmail)
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-
-# Google OAuth Configuration
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-```
-
-#### Gmail Setup for OTP Emails
-
-1. **Enable 2-Factor Authentication** on your Gmail account
-2. **Generate App Password**:
-   - Go to [Google Account Settings](https://myaccount.google.com/)
-   - Navigate to Security → 2-Step Verification → App passwords
-   - Generate a new app password for "Mail"
-   - Use this password in the `EMAIL_PASS` environment variable
-
-#### Google OAuth Setup
-
-1. **Create Google Cloud Project**:
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Create a new project or select existing one
-
-2. **Enable Google+ API**:
-   - Navigate to APIs & Services → Library
-   - Search for "Google+ API" and enable it
-
-3. **Create OAuth 2.0 Credentials**:
-   - Go to APIs & Services → Credentials
-   - Click "Create Credentials" → OAuth 2.0 Client IDs
-   - Application type: Web application
-   - Authorized redirect URIs: `http://localhost:5000/api/auth/google/callback`
-   - Copy Client ID and Client Secret to your `.env` file
-
-#### Start Backend Server
-
-```bash
-npm run dev
-```
-
-The backend will be running on `http://localhost:5000`
-
-### 3. Frontend Setup
-
-```bash
-cd frontend
-npm install
-```
-
-#### Start Frontend Development Server
-
-```bash
-npm run dev
-```
-
-The frontend will be running on `http://localhost:5173`
-
-## 📱 Application Usage
-
-### 1. User Registration
-- Navigate to `/register`
-- Fill in name, email, and password
-- Verify email with 6-digit OTP sent to your inbox
-- Alternative: Sign up using Google OAuth
-
-### 2. User Login
-- Navigate to `/login`
-- Use email and password credentials
-- Or continue with Google if previously signed up
-
-### 3. Welcome Page (`/`)
-- View user account information
-- Access account status and verification details
-- Navigate to Dashboard or logout
-
-### 4. Dashboard (`/dashboard`)
-- **View Notes**: Grid or List view modes
-- **Search**: Real-time search across titles, content, and tags
-- **Filter**: Filter by tags or pinned status
-- **Sort**: Sort by newest, oldest, or alphabetical
-- **Create**: Add new notes with rich metadata
-- **Manage**: Edit, delete, or pin/unpin notes
-- **Organize**: Use color coding and tags for organization
-
-### 5. Note Management Features
-- **Create**: Click "New Note" and fill in details
-- **Edit**: Click edit icon on any note
-- **Delete**: Click delete icon and confirm action
-- **Pin**: Click pin icon to pin/unpin notes
-- **Color**: Choose from 12 background colors
-- **Tags**: Add comma-separated tags for categorization
-- **Search**: Use search bar for instant filtering
-
-## 🔗 API Endpoints
-
-### Authentication Endpoints
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `POST` | `/api/auth/register` | User registration | No |
-| `POST` | `/api/auth/verify-otp` | Email verification | No |
-| `POST` | `/api/auth/resend-otp` | Resend OTP | No |
-| `POST` | `/api/auth/login` | User login | No |
-| `GET` | `/api/auth/google` | Google OAuth | No |
-| `GET` | `/api/auth/google/callback` | OAuth callback | No |
-| `GET` | `/api/auth/me` | Get current user | Yes |
-
-### Notes Endpoints
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/api/notes` | Get user's notes | Yes |
-| `POST` | `/api/notes` | Create new note | Yes |
-| `GET` | `/api/notes/:id` | Get single note | Yes |
-| `PUT` | `/api/notes/:id` | Update note | Yes |
-| `DELETE` | `/api/notes/:id` | Delete note | Yes |
-| `GET` | `/api/notes/tags/all` | Get user's tags | Yes |
-
-### Utility Endpoints
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/api/health` | Health check | No |
-
-## 🎨 Design System
-
-### Color Palette
-- **Primary Blue**: `#2563eb` (Primary actions, links)
-- **Gray Scale**: 50-900 range for text and backgrounds
-- **Note Colors**: 12 predefined background colors
-- **Status Colors**: Green (success), Red (error), Yellow (warning)
-
-### Typography
-- **Font Family**: Inter (Google Fonts)
-- **Font Weights**: 300, 400, 500, 600, 700
-- **Responsive Sizing**: Scales from mobile to desktop
-
-### Component Library
-- **Buttons**: Primary, Secondary variants with hover states
-- **Input Fields**: Consistent styling with focus states
-- **Cards**: Rounded corners with subtle shadows
-- **Modals**: Backdrop blur with smooth animations
+### Backend
+- **Node.js** - JavaScript runtime environment
+- **Express.js 4.18.2** - Fast, unopinionated web framework
+- **MongoDB** - Flexible NoSQL database
+- **Mongoose 8.0.3** - Elegant MongoDB object modeling
+- **JWT (jsonwebtoken 9.0.2)** - JSON Web Token implementation
+- **Passport.js 0.7.0** - Authentication middleware
+- **Bcryptjs 2.4.3** - Password hashing library
+- **Express Validator 7.0.1** - Server-side validation
+- **Helmet 7.1.0** - Security middleware
+- **Express Rate Limit 7.1.5** - Rate limiting middleware
 
 ## 📁 Project Structure
 
 ```
 assignment-2/
-├── backend/                          # Backend application
+├── backend/
 │   ├── config/
-│   │   └── passport.js            
+│   │   └── passport.js          # Google OAuth configuration
+│   ├── middleware/
+│   │   ├── auth.js              # JWT authentication middleware
+│   │   └── errorHandler.js      # Global error handling
+│   ├── models/
+│   │   ├── User.js              # User schema and methods
+│   │   └── Note.js              # Note schema with indexing
+│   ├── routes/
+│   │   ├── auth.js              # Authentication endpoints
+│   │   └── notes.js             # Note CRUD operations
+│   ├── package.json
+│   └── server.js                # Main server entry point
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ProtectedRoute.jsx   # Route protection component
+│   │   │   └── PublicRoute.jsx      # Public route wrapper
+│   │   ├── contexts/
+│   │   │   └── AuthContext.jsx      # Authentication context provider
+│   │   ├── pages/
+│   │   │   ├── AuthCallback.jsx     # Google OAuth callback handler
+│   │   │   ├── Dashboard.jsx        # Main notes dashboard
+│   │   │   ├── Login.jsx            # User login page
+│   │   │   ├── Register.jsx         # User registration page
+│   │   │   └── Welcome.jsx          # Welcome landing page
+│   │   ├── App.jsx                  # Main application component
+│   │   ├── main.jsx                 # Application entry point
+│   │   └── index.css                # Global styles and Tailwind
+│   ├── package.json
+│   └── vite.config.js               # Vite build configuration
+└── README.md
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js** (v16 or higher)
+- **MongoDB** (local installation or MongoDB Atlas)
+- **Google OAuth credentials** (for Google login feature)
+
+### Environment Setup
+
+Create a `.env` file in the `backend` directory:
+
+```env
+# Database Configuration
+MONGODB_URI=mongodb://localhost:27017/notetaking
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-here
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Application URLs
+FRONTEND_URL=http://localhost:5173
+PORT=5000
+```
+
+### Installation & Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd assignment-2
+   ```
+
+2. **Install backend dependencies**
+   ```bash
+   cd backend
+   npm install
+   ```
+
+3. **Install frontend dependencies**
+   ```bash
+   cd ../frontend
+   npm install
+   ```
+
+4. **Set up MongoDB**
+   - Install MongoDB locally or use MongoDB Atlas
+   - Update the `MONGODB_URI` in your `.env` file
+
+5. **Configure Google OAuth**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select existing one
+   - Enable Google+ API
+   - Create OAuth 2.0 credentials
+   - Add authorized redirect URIs: `http://localhost:5000/api/auth/google/callback`
+   - Update `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `.env`
+
+### Running the Application
+
+1. **Start the backend server**
+   ```bash
+   cd backend
+   npm run dev
+   ```
+   Backend will run on `http://localhost:5000`
+
+2. **Start the frontend development server**
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+   Frontend will run on `http://localhost:5173`
+
+3. **Access the application**
+   - Open your browser and navigate to `http://localhost:5173`
+   - Register a new account or login with Google
+
+## 📚 API Documentation
+
+### Authentication Endpoints (`/api/auth`)
+
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| POST | `/register` | Register new user | None |
+| POST | `/login` | User login | None |
+| GET | `/google` | Google OAuth login | None |
+| GET | `/google/callback` | Google OAuth callback | None |
+| GET | `/me` | Get current user info | Required |
+
+### Notes Endpoints (`/api/notes`)
+
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| GET | `/` | Get all user notes | Required |
+| GET | `/:id` | Get single note | Required |
+| POST | `/` | Create new note | Required |
+| PUT | `/:id` | Update note | Required |
+| DELETE | `/:id` | Delete note | Required |
+| GET | `/tags/all` | Get all user tags | Required |
+
+### Request/Response Examples
+
+#### Register User
+```bash
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+#### Create Note
+```bash
+POST /api/notes
+Authorization: Bearer <jwt-token>
+Content-Type: application/json
+
+{
+  "title": "My First Note",
+  "content": "This is the content of my note",
+  "tags": ["work", "important"],
+  "color": "#ffffff",
+  "isPinned": false
+}
+```
+
+## 🔐 Authentication Flow
+
+### Email/Password Registration
+1. User submits registration form with name, email, and password
+2. Backend validates input and creates user account
+3. User account is immediately verified (no OTP required)
+4. JWT token is generated and returned
+5. User is automatically logged in and redirected to dashboard
+
+### Google OAuth Flow
+1. User clicks "Login with Google" button
+2. Redirected to Google OAuth consent screen
+3. After consent, redirected back with authorization code
+4. Backend exchanges code for user profile information
+5. User account is created/linked automatically
+6. JWT token is issued and user is logged in
+
+## 🎨 UI/UX Features
+
+- **Responsive Design**: Mobile-first approach ensuring perfect experience on all devices
+- **Modern Interface**: Clean, minimalist design with smooth animations and transitions
+- **User Feedback**: Comprehensive toast notifications for all user actions
+- **Loading States**: Proper loading indicators and skeleton screens
+- **Error Handling**: User-friendly error messages with clear instructions
+- **Accessibility**: Proper ARIA labels, keyboard navigation, and screen reader support
+
+## 📱 Responsive Design
+
+The application is fully responsive and optimized for:
+- **Desktop**: 1200px and above - Full feature set with sidebar navigation
+- **Tablet**: 768px - 1199px - Optimized layout with touch-friendly controls
+- **Mobile**: 320px - 767px - Mobile-first design with collapsible navigation
+
+## 🚀 Deployment
+
+### Backend Deployment
+- Deploy to platforms like **Heroku**, **Railway**, **DigitalOcean**, or **AWS**
+- Set up **MongoDB Atlas** for production database
+- Configure environment variables on your hosting platform
+- Update CORS settings for production frontend URL
+
+### Frontend Deployment
+- Build the production version: `npm run build`
+- Deploy to platforms like **Vercel**, **Netlify**, or **GitHub Pages**
+- Update API base URL in `main.jsx` for production backend
+
+### Environment Variables for Production
+```env
+# Production Environment
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/notetaking
+JWT_SECRET=your-production-secret-key
+GOOGLE_CLIENT_ID=your-production-google-client-id
+GOOGLE_CLIENT_SECRET=your-production-google-client-secret
+FRONTEND_URL=https://your-frontend-domain.com
+PORT=5000
+```
+
+## 🧪 Testing
+
+### Manual Testing Checklist
+- [ ] User registration with email/password
+- [ ] User login with email/password
+- [ ] Google OAuth login
+- [ ] Create, edit, delete notes
+- [ ] Pin/unpin notes
+- [ ] Search functionality
+- [ ] Tag filtering
+- [ ] Responsive design on different screen sizes
+- [ ] Error handling and validation
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit your changes**: `git commit -m 'Add some amazing feature'`
+4. **Push to the branch**: `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
+
+### Development Guidelines
+- Follow existing code style and patterns
+- Add comments for complex logic
+- Test your changes thoroughly
+- Update documentation if needed
+
+## 📝 License
+
+This project is licensed under the **ISC License**.
+
+## 🙏 Acknowledgments
+
+- **React Team** - For the amazing React framework
+- **Tailwind CSS** - For the utility-first CSS framework
+- **MongoDB** - For the flexible and powerful database
+- **Express.js** - For the minimal and flexible web framework
+- **All Contributors** - Thank you to all open-source contributors of the packages used
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+- Check the [Issues](https://github.com/your-repo/issues) page
+- Create a new issue with detailed description
+- Include steps to reproduce any bugs
+
+---
+
+**Built with ❤️ using modern web technologies**
 ```

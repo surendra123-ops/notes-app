@@ -37,7 +37,7 @@ const Register = () => {
     const result = await register(formData.name, formData.email, formData.password)
     
     if (result.success) {
-      navigate('/verify-otp', { state: { email: formData.email } })
+      navigate('/dashboard')
     }
     
     setLoading(false)
