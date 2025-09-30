@@ -18,6 +18,7 @@ const AuthCallback = () => {
     const handleCallback = async () => {
       const token = searchParams.get('token')
       console.log('Token found:', token ? 'YES' : 'NO')
+      console.log('Token value:', token)
       
       if (token) {
         try {
@@ -30,6 +31,7 @@ const AuthCallback = () => {
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
           
           // Fetch user data to verify the token works
+          console.log('Fetching user data...')
           const response = await axios.get('/api/auth/me')
           console.log('User data received:', response.data.user)
           
@@ -46,6 +48,7 @@ const AuthCallback = () => {
           }
         } catch (error) {
           console.error('Auth callback error:', error)
+          console.error('Error response:', error.response?.data)
           localStorage.removeItem('token')
           delete axios.defaults.headers.common['Authorization']
           toast.error('Authentication failed')

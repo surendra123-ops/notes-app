@@ -111,7 +111,9 @@ router.get('/google/callback',
   (req, res) => {
     try {
       const token = generateToken(req.user._id);
-      const redirectURL = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/auth/callback?token=${token}`;
+      // Use the same origin as the request instead of environment variable
+      const redirectURL = `${req.protocol}://${req.get('host')}/auth/callback?token=${token}`;
+      console.log('Redirecting to:', redirectURL);
       res.redirect(redirectURL);
     } catch (error) {
       console.error('OAuth callback error:', error);
