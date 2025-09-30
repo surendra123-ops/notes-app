@@ -1,90 +1,100 @@
-# Note Taking App
+# �� Note Taking App
 
-A modern, full-stack web application for creating, managing, and organizing personal notes with secure authentication, beautiful user interface, and comprehensive error handling.
+A modern, full-stack web application for creating and managing personal notes with secure authentication and beautiful UI.
 
 ## ✨ Features
 
-### 🔐 Authentication & Security
-- **Email & Password Registration** - Simple and secure user registration with real-time validation
-- **Google OAuth Integration** - One-click login with Google accounts
-- **JWT Authentication** - Secure token-based authentication system
-- **Protected Routes** - Route protection for authenticated users only
-- **Auto-login** - Seamless login experience with persistent sessions
-- **Smart User Flow** - Intelligent redirects between login/register pages
-- **Password Strength Indicator** - Visual feedback for password security
-- **Comprehensive Error Handling** - Detailed validation and error messages
-
-### 📝 Note Management
-- **Create Notes** - Rich text note creation with titles and content
-- **Edit & Update** - Real-time note editing and updates
-- **Delete Notes** - Secure note deletion with confirmation
-- **Pin Notes** - Pin important notes to the top for easy access
-- **Color Coding** - Customize note colors for better visual organization
-- **Tagging System** - Add and filter notes using custom tags
-- **Search Functionality** - Powerful search through notes by title and content
-- **Sorting Options** - Sort notes by date, title, or pinned status
-- **Pagination** - Efficient handling of large note collections
-
-### 🎨 User Interface & Experience
-- **Responsive Design** - Perfect experience across desktop, tablet, and mobile
-- **Modern UI** - Clean, intuitive interface built with Tailwind CSS
-- **Grid & List Views** - Toggle between different note display modes
-- **Real-time Notifications** - Toast notifications for all user actions
-- **Loading States** - Smooth loading indicators and skeleton screens
-- **Error Handling** - User-friendly error messages with clear instructions
-- **Form Validation** - Real-time validation with visual feedback
-- **Accessibility** - Proper ARIA labels, keyboard navigation, and screen reader support
-
-### 🔒 Security Features
-- **Password Hashing** - Bcrypt with salt rounds for secure password storage
-- **JWT Tokens** - Secure token-based authentication with expiration
-- **Rate Limiting** - API rate limiting to prevent abuse
-- **Input Validation** - Server-side validation for all user inputs
-- **CORS Protection** - Configured CORS for secure cross-origin requests
-- **Security Headers** - Helmet.js for additional security headers
-- **XSS Protection** - Input sanitization and output encoding
+- **🔐 Secure Authentication** - Email/password registration + Google OAuth login
+- **📝 Note Management** - Create, edit, delete, and organize notes
+- **🎨 Modern UI** - Responsive design with Tailwind CSS
+- **🔒 JWT Security** - Token-based authentication with protected routes
+- **📱 Mobile-First** - Fully responsive across all devices
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **React 19.1.1** - Latest React with modern hooks and concurrent features
-- **React Router DOM 6.20.1** - Client-side routing with protected routes
-- **Axios 1.6.2** - HTTP client for API communication with interceptors
-- **Tailwind CSS 3.3.6** - Utility-first CSS framework for responsive design
-- **Lucide React 0.294.0** - Beautiful, customizable icons
-- **React Hot Toast 2.4.1** - Elegant toast notifications
-- **Vite 7.1.7** - Lightning-fast build tool and dev server
+**Frontend:** React 19, React Router, Tailwind CSS, Axios, React Hot Toast  
+**Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, Passport.js  
+**Authentication:** Google OAuth 2.0, JWT tokens, bcrypt password hashing
 
-### Backend
-- **Node.js** - JavaScript runtime environment
-- **Express.js 4.18.2** - Fast, unopinionated web framework
-- **MongoDB** - Flexible NoSQL database with Atlas support
-- **Mongoose 8.0.3** - Elegant MongoDB object modeling with validation
-- **JWT (jsonwebtoken 9.0.2)** - JSON Web Token implementation
-- **Passport.js 0.7.0** - Authentication middleware with Google OAuth
-- **Bcryptjs 2.4.3** - Password hashing library with salt rounds
-- **Express Validator 7.0.1** - Server-side validation middleware
-- **Helmet 7.1.0** - Security middleware for HTTP headers
-- **Express Rate Limit 7.1.5** - Rate limiting middleware
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js (v18+)
+- MongoDB (local or Atlas)
+- Google OAuth credentials
+
+### Installation
+
+1. **Clone and install dependencies**
+   ```bash
+   git clone <repository-url>
+   cd assignment-2
+   npm run install-all
+   ```
+
+2. **Set up environment variables**
+   ```bash
+   # Copy backend/env.example to backend/.env
+   cp backend/env.example backend/.env
+   # Edit backend/.env with your values
+   ```
+
+3. **Configure Google OAuth**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create OAuth 2.0 credentials
+   - Add redirect URI: `http://localhost:5000/api/auth/google/callback`
+
+4. **Run the application**
+   ```bash
+   # Development mode (both frontend & backend)
+   npm run dev
+   
+   # Or run separately:
+   # Backend: cd backend && npm run dev
+   # Frontend: cd frontend && npm run dev
+   ```
+
+5. **Access the app**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:5000
+
+## 🌐 Deployment (Render)
+
+### Single Service Deployment
+
+This app is configured to deploy as a single service on Render:
+
+1. **Connect your GitHub repository to Render**
+2. **Create a new Web Service**
+3. **Configure environment variables:**
+   ```
+   NODE_ENV=production
+   MONGODB_URI=your-mongodb-atlas-uri
+   JWT_SECRET=your-secret-key
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+   VITE_API_URL=https://your-app-name.onrender.com
+   ```
+4. **Set build and start commands:**
+   - Build Command: `npm run build`
+   - Start Command: `npm start`
+
+### Google OAuth for Production
+
+Update your Google OAuth settings:
+- Add redirect URI: `https://your-app-name.onrender.com/api/auth/google/callback`
+- Remove localhost URIs for production
 
 ## 📁 Project Structure
 
 ```
 assignment-2/
-├── backend/
-│   ├── config/
-│   │   └── passport.js          # Google OAuth configuration
-│   ├── middleware/
-│   │   ├── auth.js              # JWT authentication middleware
-│   │   └── errorHandler.js      # Global error handling middleware
-│   ├── models/
-│   │   ├── User.js              # User schema with password hashing
-│   │   └── Note.js              # Note schema with indexing
-│   ├── routes/
-│   │   ├── auth.js              # Authentication endpoints
-│   │   └── notes.js             # Note CRUD operations
-│   ├── package.json
-│   └── server.js                # Main server entry point
+├── backend/                 # Express.js API server
+│   ├── config/passport.js   # Google OAuth config
+│   ├── middleware/          # Auth & error handling
+│   ├── models/             # MongoDB schemas
+│   ├── routes/             # API endpoints
+│   └── server.js           # Main server file
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -106,86 +116,7 @@ assignment-2/
 └── README.md
 ```
 
-## 🚀 Getting Started
-
-### Prerequisites
-- **Node.js** (v16 or higher)
-- **MongoDB** (local installation or MongoDB Atlas)
-- **Google OAuth credentials** (for Google login feature)
-
-### Environment Setup
-
-Create a `.env` file in the `backend` directory:
-
-```env
-# Database Configuration
-MONGODB_URI=mongodb://localhost:27017/notetaking
-
-# JWT Configuration
-JWT_SECRET=your-super-secret-jwt-key-here
-
-# Google OAuth Configuration
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-
-# Application URLs
-FRONTEND_URL=http://localhost:5173
-PORT=5000
-```
-
-### Installation & Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd assignment-2
-   ```
-
-2. **Install backend dependencies**
-   ```bash
-   cd backend
-   npm install
-   ```
-
-3. **Install frontend dependencies**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
-
-4. **Set up MongoDB**
-   - Install MongoDB locally or use MongoDB Atlas
-   - Update the `MONGODB_URI` in your `.env` file
-
-5. **Configure Google OAuth**
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Create a new project or select existing one
-   - Enable Google+ API
-   - Create OAuth 2.0 credentials
-   - Add authorized redirect URIs: `http://localhost:5000/api/auth/google/callback`
-   - Update `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `.env`
-
-### Running the Application
-
-1. **Start the backend server**
-   ```bash
-   cd backend
-   npm run dev
-   ```
-   Backend will run on `http://localhost:5000`
-
-2. **Start the frontend development server**
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-   Frontend will run on `http://localhost:5173`
-
-3. **Access the application**
-   - Open your browser and navigate to `http://localhost:5173`
-   - Register a new account or login with Google
-
-## 📚 API Documentation
+## �� API Documentation
 
 ### Authentication Endpoints (`/api/auth`)
 
