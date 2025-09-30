@@ -20,7 +20,7 @@ A modern, full-stack web application for creating and managing personal notes wi
 
 ### Prerequisites
 - Node.js (v18+)
-- MongoDB (local or Atlas)
+- MongoDB ( Atlas)
 - Google OAuth credentials
 
 ### Installation
@@ -54,9 +54,7 @@ A modern, full-stack web application for creating and managing personal notes wi
    # Frontend: cd frontend && npm run dev
    ```
 
-5. **Access the app**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:5000
+
 
 ## 🌐 Deployment (Render)
 
@@ -259,27 +257,6 @@ The application is fully responsive and optimized for:
 
 ## 🚀 Deployment
 
-### Backend Deployment
-- Deploy to platforms like **Heroku**, **Railway**, **DigitalOcean**, or **AWS**
-- Set up **MongoDB Atlas** for production database
-- Configure environment variables on your hosting platform
-- Update CORS settings for production frontend URL
-
-### Frontend Deployment
-- Build the production version: `npm run build`
-- Deploy to platforms like **Vercel**, **Netlify**, or **GitHub Pages**
-- Update API base URL in `main.jsx` for production backend
-
-### Environment Variables for Production
-```env
-# Production Environment
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/notetaking
-JWT_SECRET=your-production-secret-key
-GOOGLE_CLIENT_ID=your-production-google-client-id
-GOOGLE_CLIENT_SECRET=your-production-google-client-secret
-FRONTEND_URL=https://your-frontend-domain.com
-PORT=5000
-```
 
 ### Deployment Checklist
 - [ ] Set up production database (MongoDB Atlas)
@@ -309,102 +286,4 @@ PORT=5000
 - [ ] Loading states and animations
 - [ ] Toast notifications
 
-### Error Scenarios to Test
-- [ ] Invalid email format
-- [ ] Weak passwords
-- [ ] Password mismatch
-- [ ] Duplicate email registration
-- [ ] Invalid login credentials
-- [ ] Network errors
-- [ ] Server errors
 
-## 🔧 Development
-
-### Available Scripts
-
-#### Backend
-```bash
-npm start          # Start production server
-npm run dev        # Start development server with nodemon
-npm test           # Run tests (when implemented)
-```
-
-#### Frontend
-```bash
-npm run dev        # Start development server
-npm run build      # Build for production
-npm run preview    # Preview production build
-npm run lint       # Run ESLint
-```
-
-### Code Style Guidelines
-- Use functional components with hooks
-- Follow React best practices
-- Use meaningful variable and function names
-- Add comments for complex logic
-- Maintain consistent code formatting
-- Use TypeScript for better type safety (optional)
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Commit your changes**: `git commit -m 'Add some amazing feature'`
-4. **Push to the branch**: `git push origin feature/amazing-feature`
-5. **Open a Pull Request**
-
-### Development Guidelines
-- Follow existing code style and patterns
-- Add comments for complex logic
-- Test your changes thoroughly
-- Update documentation if needed
-- Ensure responsive design works
-- Test error handling scenarios
-
-### Pull Request Template
-- Description of changes
-- Screenshots (if UI changes)
-- Testing checklist
-- Breaking changes (if any)
-
-## 📝 License
-
-This project is licensed under the **ISC License**.
-
-## 🙏 Acknowledgments
-
-- **React Team** - For the amazing React framework
-- **Tailwind CSS** - For the utility-first CSS framework
-- **MongoDB** - For the flexible and powerful database
-- **Express.js** - For the minimal and flexible web framework
-- **All Contributors** - Thank you to all open-source contributors of the packages used
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-
-### Common Issues
-- **CORS Errors**: Check your environment variables and CORS settings
-- **Database Connection**: Verify MongoDB URI and network access
-- **Google OAuth**: Ensure redirect URIs are correctly configured
-- **Build Errors**: Check Node.js version and dependencies
-
-### Getting Help
-- Check the [Issues](https://github.com/your-repo/issues) page
-- Create a new issue with detailed description
-- Include steps to reproduce any bugs
-- Provide error messages and screenshots
-
-### Contact
-- Create an issue for bug reports
-- Use discussions for questions
-- Follow the project for updates
-
----
-
-**Built with ❤️ using modern web technologies**
-
-*Last updated: January 2024*
-```
