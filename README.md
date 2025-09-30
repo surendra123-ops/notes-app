@@ -2,6 +2,8 @@
 
 A modern, full-stack web application for creating and managing personal notes with secure authentication and beautiful UI.
 
+DEPLOYMENT_URL:https://notes-app-74ue.onrender.com
+
 ## ✨ Features
 
 - **🔐 Secure Authentication** - Email/password registration + Google OAuth login
