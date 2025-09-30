@@ -10,7 +10,11 @@ const authenticateToken = async (req, res, next) => {
       return res.status(401).json({ message: 'Access token required' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    // Use a fallback JWT secret if not set
+    const jwtSecret = process.env.JWT_SECRET || 'your-secret-key';
+    console.log('Using JWT secret:', jwtSecret ? 'SET' : 'NOT SET');
+    
+    const decoded = jwt.verify(token, jwtSecret);
     const user = await User.findById(decoded.userId);
     
     if (!user) {
@@ -20,13 +24,13 @@ const authenticateToken = async (req, res, next) => {
     req.userId = user._id;
     next();
   } catch (error) {
+    console.error('Auth middleware error:', error);
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({ message: 'Invalid token' });
     }
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({ message: 'Token expired' });
     }
-    console.error('Auth middleware error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
