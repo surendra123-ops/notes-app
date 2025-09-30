@@ -111,8 +111,10 @@ router.get('/google/callback',
   (req, res) => {
     try {
       const token = generateToken(req.user._id);
-      // Use the same origin as the request instead of environment variable
-      const redirectURL = `${req.protocol}://${req.get('host')}/auth/callback?token=${token}`;
+      // Force HTTPS for production
+      const protocol = req.get('x-forwarded-proto') || req.protocol;
+      const host = req.get('host');
+      const redirectURL = `${protocol}://${host}/auth/callback?token=${token}`;
       console.log('Redirecting to:', redirectURL);
       res.redirect(redirectURL);
     } catch (error) {
