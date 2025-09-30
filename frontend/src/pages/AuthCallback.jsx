@@ -2,10 +2,12 @@ import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { useAuth } from '../contexts/AuthContext'
 
 const AuthCallback = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const { setUser } = useAuth()
 
   useEffect(() => {
     console.log('=== AUTH CALLBACK DEBUG ===')
@@ -32,6 +34,9 @@ const AuthCallback = () => {
           console.log('User data received:', response.data.user)
           
           if (response.data.user) {
+            // Update the AuthContext with the user data
+            setUser(response.data.user)
+            
             toast.success('Login successful!')
             console.log('Redirecting to dashboard...')
             // Navigate to dashboard
@@ -54,7 +59,7 @@ const AuthCallback = () => {
     }
 
     handleCallback()
-  }, [searchParams, navigate])
+  }, [searchParams, navigate, setUser])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

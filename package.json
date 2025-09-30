@@ -1,0 +1,19 @@
+{
+  "name": "note-taking-app",
+  "version": "1.0.0",
+  "description": "Full-stack note-taking application",
+  "main": "backend/server.js",
+  "scripts": {
+    "build": "cd frontend && npm ci && npm run build",
+    "start": "npm run build && cd backend && npm ci && npm start",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "install-all": "npm ci && cd frontend && npm ci && cd ../backend && npm ci"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

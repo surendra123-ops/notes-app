@@ -15,6 +15,12 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: false
-  }
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  },
+  publicDir: 'public'
 })

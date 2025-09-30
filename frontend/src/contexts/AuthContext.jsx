@@ -100,7 +100,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     register,
-    logout
+    logout,
+    setUser // Add this to expose setUser function
   }
 
   return (

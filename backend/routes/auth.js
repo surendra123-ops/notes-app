@@ -109,8 +109,14 @@ router.get('/google', passport.authenticate('google', {
 router.get('/google/callback', 
   passport.authenticate('google', { session: false }),
   (req, res) => {
-    const token = generateToken(req.user._id);
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/auth/callback?token=${token}`);
+    try {
+      const token = generateToken(req.user._id);
+      const redirectURL = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/auth/callback?token=${token}`;
+      res.redirect(redirectURL);
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      res.status(500).json({ message: 'OAuth callback error', error: error.message });
+    }
   }
 );
 

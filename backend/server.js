@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const passport = require('passport');
+const path = require('path');
 require('dotenv').config();
 
 // Import passport configuration
@@ -55,13 +56,16 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
+// Serve static files from the frontend dist directory
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Handle React routing, return all requests to React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+});
+
 // Error handling middleware
 app.use(errorHandler);
-
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ message: 'Route not found' });
-});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
