@@ -14,12 +14,19 @@ const AuthCallback = () => {
     console.log('Current URL:', window.location.href)
     console.log('Hash:', window.location.hash)
     console.log('Search params:', searchParams.toString())
-    console.log('All search params:', Object.fromEntries(searchParams))
     
     const handleCallback = async () => {
-      const token = searchParams.get('token')
-      console.log('Token found:', token ? 'YES' : 'NO')
-      console.log('Token value:', token)
+      // Try multiple ways to get the token
+      const tokenFromParams = searchParams.get('token')
+      const tokenFromHash = new URLSearchParams(window.location.hash.substring(1)).get('token')
+      const tokenFromURL = new URLSearchParams(window.location.search).get('token')
+      
+      console.log('Token from searchParams:', tokenFromParams)
+      console.log('Token from hash:', tokenFromHash)
+      console.log('Token from URL:', tokenFromURL)
+      
+      const token = tokenFromParams || tokenFromHash || tokenFromURL
+      console.log('Final token:', token)
       
       if (token) {
         try {
@@ -37,7 +44,6 @@ const AuthCallback = () => {
           console.log('Fetching user data from /api/auth/me...')
           const response = await axios.get('/api/auth/me')
           console.log('User data received:', response.data)
-          console.log('User object:', response.data.user)
           
           if (response.data.user) {
             // Update the AuthContext with the user data
@@ -56,15 +62,13 @@ const AuthCallback = () => {
           console.error('Auth callback error:', error)
           console.error('Error response:', error.response?.data)
           console.error('Error status:', error.response?.status)
-          console.error('Error message:', error.message)
           localStorage.removeItem('token')
           delete axios.defaults.headers.common['Authorization']
           toast.error('Authentication failed')
           navigate('/login')
         }
       } else {
-        console.log('No token found in URL')
-        console.log('Available params:', Object.keys(Object.fromEntries(searchParams)))
+        console.log('No token found in any location')
         toast.error('No authentication token received')
         navigate('/login')
       }
